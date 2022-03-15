@@ -1,0 +1,8 @@
+config.py
+*token.*
+.ipynb_checkpoints
+**.log
+__pycache__
+**.code-workspace
+notebook-snapshots/
+test.py
