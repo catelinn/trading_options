@@ -4,6 +4,7 @@ Scrape the technical analysis data from www.investing.com
 for indices such as SPX and DJA.
 '''
 
+from distutils.log import error
 import requests
 from bs4 import BeautifulSoup as bs
 from datetime import datetime, time
@@ -55,14 +56,18 @@ def fetch(pair:str='SPX', period:str ='weekly')-> list:
     body = {'pairID' : pairIDs[pair], 'period': periodLabels[period], 'viewType' : 'normal'}
     
     with requests.Session() as s:
-        # send post request
-        r = s.post('https://www.investing.com/technical/Service/GetStudiesContent', 
-                   data = body, headers = headers)
-        # parse the response
-        soup = bs(r.content, 'lxml')
-        signal = soup.select('#techStudiesInnerWrap .summary')[-1].select('span')[-1].text # the signal
-        date = re.sub('M\ \(.*$', 'M', soup.find('div', id='updateTime').text) # when the signal was last updated by the website
-        date = est_to_pst(date) 
+        try:
+            # send post request
+            r = s.post('https://www.investing.com/technical/Service/GetStudiesContent', 
+                       data = body, headers = headers, timeout=5)
+            # parse the response
+            soup = bs(r.content, 'lxml')
+            signal = soup.select('#techStudiesInnerWrap .summary')[-1].select('span')[-1].text # the signal
+            date = re.sub('M\ \(.*$', 'M', soup.find('div', id='updateTime').text) # when the signal was last updated by the website
+            date = est_to_pst(date)
+        except Exception as e:
+            # if exception, print connection or timeout error to log
+            print(e)
     return [pair, period, signal, date]
     
 
