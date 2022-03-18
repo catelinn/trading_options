@@ -42,11 +42,12 @@ def current_f_path():
     else:
         return data_folder + 'signals_miscs.csv'
 
-# Simulate post request to have the web server generate TA signal page
-# for specified pair and period,
-# which shall be returned in the response HTML
+
 def fetch(pair:str='SPX', period:str ='weekly')-> list:
-    
+    '''
+    Simulate post request to have the web server generate TA signal page
+    for specified pair and period, which shall be returned in the response HTML
+    '''
     # headers information can be found in Chrome dev tool -> 'network' tab
     headers = { 'User-Agent': 'Mozilla/5.0',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -63,31 +64,54 @@ def fetch(pair:str='SPX', period:str ='weekly')-> list:
             # parse the response
             soup = bs(r.content, 'lxml')
             signal = soup.select('#techStudiesInnerWrap .summary')[-1].select('span')[-1].text # the signal
-            date = re.sub('M\ \(.*$', 'M', soup.find('div', id='updateTime').text) # when the signal was last updated by the website
-            date = est_to_pst(date)
+            date = soup.find('div', id='updateTime').text # when the signal was last updated by the website
+            date = tz_to_pst(date)
         except Exception as e:
             # if exception, print connection or timeout error to log
             print(e)
     return [pair, period, signal, date]
     
 
-# Convert the date from eastern time (used by the website) to pacific time (my time)
-def est_to_pst(date:str)-> datetime.date:
-    date_time = datetime.strptime(date, '%b %d, %Y %I:%M%p', ) # convert the string to datetime
-    date_time = date_time.replace(tzinfo=pytz.timezone('US/Eastern')) # add original timezone  info
-    return date_time.astimezone(pytz.timezone("US/Pacific")) # convert to pacific timezone
+
+def tz_to_pst(date:str)-> datetime.date:
+    
+    '''
+    Convert datetime with original timezone used by the website to pacific time (my time).
+    The following approach shall take care of DST automatcally with use of standard UTC-offset tz format.
+    '''
+
+    # convert timezone info string , e.g. "(GMT-4:00)" to UTC-offset tz format, e.g. "-0400"
+    import re
+    tz_original = re.findall(r'\((.*?)\)', date)[0]
+    tz_original = re.sub(r'^[A-Z]{3}|:', '', tz_original)
+    if len(tz_original) <5:
+        tz_original = re.sub('([-+])', r'\1 0', tz_original).replace(' ', '')
+
+    # format the complete original date string with tz info and parse it to datetime
+    date = re.sub(r' \(.*?\)', '', date)
+    dt_original = datetime.strptime(date+tz_original, '%b %d, %Y %I:%M%p%z')
+
+    # convert the datetime to PST timezone
+    dt_pst = dt_original.astimezone(pytz.timezone('US/Pacific'))
+    return dt_pst
 
 
-# Scrape all signals
+
 def process(pairs:list, periods:list)-> list:
+    '''
+    Scrape all signals
+    '''
     data = []
     for pair in pairs:
         for period in periods:
             data.append(fetch(pair, period))
     return data
 
-# Save signals to csv file
+
 def save(data:list, f_path)-> None:
+    '''
+    Save signals to csv file
+    '''
     
     # append if file already exists
     hdr = False if os.path.isfile(f_path) else True
