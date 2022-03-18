@@ -10,8 +10,8 @@ import getpass # manual input of encrypted password (only required to get initia
 import re
 
 # import config files
-# add path for Python interpreter to search in (
-# (the above is required when this file is called in another file in a different directory)
+# add sys path for Python interpreter to search in
+# (the above is required when this file is called as required module in another file in a different directory)
 import sys
 path_to_files = '/Volumes/ExtremeSSD/github_repos/trading_options/app'
 sys.path.insert(1, path_to_files)
@@ -193,4 +193,4 @@ class StreamClient:
     
     pass
 
-print('OK')
+#print('OK')
