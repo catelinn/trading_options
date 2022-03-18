@@ -4,5 +4,5 @@ config.py
 **.log
 __pycache__
 **.code-workspace
-notebook-snapshots/
+notebook_snapshots/
 test.py

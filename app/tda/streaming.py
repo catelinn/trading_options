@@ -6,32 +6,40 @@ import datetime
 from datetime import date
 from splinter import Browser
 from selenium import webdriver
-from tda.config import accounts
 import getpass # manual input of encrypted password (only required to get initial access code)
+import re
 
+# import config files
+# add path for Python interpreter to search in (
+# (the above is required when this file is called in another file in a different directory)
+import sys
+path_to_files = '/Volumes/ExtremeSSD/github_repos/trading_options/app'
+sys.path.insert(1, path_to_files)
+from tda.config.config import accounts
+try:
+    from tda.config.refresh_token import refresh_token, expiry
+except ImportError:
+    refresh_token = None
 
 
 class Client:
-    '''tda authentication - retrieve access_token for authorized access to TDA endpoints'''
+    '''tda authentication client - retrieve access_token for authorized access to TDA endpoints'''
 
     # initiate
     def __init__(self, acc_type='margin'):
 
         self.access_token = None
-        self.refresh_token = None
         self.client_id = accounts[acc_type]['clientId']
         self.account_id = accounts[acc_type]['accountNumber']
 
         # import existing and unexpired refresh_token
-        if os.path.exists('refresh_token.py'):
-            from refresh_token import expiry
-            if datetime.datetime.strptime(expiry, '%m%d%Y').date() > date.today():
-                from refresh_token import refresh_token
-                self.refresh_token = refresh_token     
-                
-
-        if refresh_token is None:
-            print('refresh token does not exist or has expired, new authentication that follows login flow is required.')
+        self.refresh_token = refresh_token
+        if self.refresh_token:
+            if datetime.datetime.strptime(expiry, '%m%d%Y').date() <= date.today():
+                self.refresh_token = None 
+            
+        if self.refresh_token is None:
+            print('refresh token does not exist or has expired, new authentication with login flow is required.')
             self.username = accounts[acc_type]['username']
             self.password = getpass.getpass(f'Enter password for user "{self.username}":')
             self.callback_url = accounts[acc_type]['callbackUrl']
@@ -154,7 +162,8 @@ class Client:
 
         # save the new refresh token and expiry date (refresh token expires in 90 days)
         expiry = (date.today() + datetime.timedelta(days=90*2)).strftime("%m%d%Y")
-        f = open('refresh_token.py', 'w')
+        f_dir = '/Volumes/ExtremeSSD/github_repos/trading_options/app/tda/config/'
+        f = open(f_dir+'refresh_token.py', 'w')
         f.write('refresh_token='+repr(self.refresh_token))
         f.write('\nexpiry='+repr(expiry))
         f.close()
@@ -183,3 +192,5 @@ class Client:
 class StreamClient:
     
     pass
+
+print('OK')
