@@ -203,18 +203,19 @@ class Client:
 
 class WebSocketClient():
     """The client """
-    
-    def __init__(self, uri):
-        self.uri = uri
+
+
+    def __init__(self):
+        pass
         
-    async def connect(self):
+    async def connect(self, uri):
         '''
             Connecting to webSocket server
             websockets.client.connect returns a WebSocketClientProtocol, which is used to send and receive messages
         '''
                 
         # connect to a websocket
-        self.connection = await wsClient.connect(self.uri)
+        self.connection = await wsClient.connect(uri)
         
         # if all goes well, let the user know
         if self.connection.open:
@@ -267,20 +268,29 @@ class WebSocketClient():
 
 
 class StreamClient():
-    
+
     def __init__(self, client):
         self.account_id = client.account_id
         self.access_token = client.access_token 
 
-    async def login(self):
-        # Get Streamer info from User Principles
+    # initialize websocket object
+    ws = WebSocketClient()
+
+    async def login(self, ws=ws):
+        '''
+        - Fetch streamer info from User Principles, which is required to generate the url for login to the websocket server
+        - Connect and login to the webserver
+        - Return the ws connection object
+        '''
+        
+        # Get Streamer info
         headers = {'Authorization': f'Bearer {self.access_token}'}
         endpoint = 'https://api.tdameritrade.com/v1/userprincipals'
         params = {'fields':'streamerSubscriptionKeys,streamerConnectionInfo'}
         r = requests.get(url=endpoint, params=params, headers=headers)
         userPrinciplesResponse = r.json()
 
-        # Extract streamer information
+        # Extract Streamer info
         streamerInfo = userPrinciplesResponse['streamerInfo']
 
         # Extract specific account details
@@ -336,18 +346,19 @@ class StreamClient():
         uri = 'wss://'+streamerInfo['streamerSocketUrl']+'/ws'
 
         # send login request to streamer api
-        ws = WebSocketClient(uri)
-        self.connection = await ws.connect()
+        self.connection = await ws.connect(uri)
+
+    
 
 
 client = Client()
-#client.get_first_access_token()
 client.authenticate()
 
 
 async def main():
     stream_client = StreamClient(client)
     await stream_client.login()
+    print(stream_client.connection)
 
 asyncio.run(main())
 
