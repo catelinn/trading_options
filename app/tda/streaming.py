@@ -8,6 +8,13 @@ from splinter import Browser
 from selenium import webdriver
 import getpass # manual input of encrypted password (only required to get initial access code)
 import re
+import json
+from dateutil import parser
+
+import websockets
+from websockets import client as wsClient
+import asyncio
+
 
 # import config files
 # add sys path for Python interpreter to search in
@@ -39,10 +46,10 @@ class Client:
                 self.refresh_token = None 
             
         if self.refresh_token is None:
-            print('refresh token does not exist or has expired, new authentication with login flow is required.')
             self.username = accounts[acc_type]['username']
             self.password = getpass.getpass(f'Enter password for user "{self.username}":')
             self.callback_url = accounts[acc_type]['callbackUrl']
+            print('refresh token does not exist or has expired, new authentication with login flow is required.')
                 
 
     # complete authentication: get a valid access token
@@ -77,7 +84,7 @@ class Client:
         options = webdriver.ChromeOptions()
 
         # make sure the window is maximized
-        options.add_argument('--start-maximized')
+        options.add_argument('--start-maximized disable-infobars')
 
         # make sure notification are off
         options.add_argument('--disable-notifications')
@@ -155,7 +162,7 @@ class Client:
                 'redirect_uri': self.callback_url}
 
         # post the data to get the token
-        r = requests.post(url, headers=headers, data=payload)
+        r = requests.post(url, headers=headers, data=payload, timeout=5)
         self.access_token = r.json()['access_token']
         self.refresh_token = r.json()['refresh_token']
         print('New access_token and refresh_token retrieved')
@@ -184,13 +191,167 @@ class Client:
                 'refresh_token': self.refresh_token}
 
         # post the data to get the token
-        r = requests.post(url, headers=headers, data=payload)
-        self.access_token = r.json()['access_token']
-        print("New access token retrieved with unexpired refresh token.")
+        try:
+            r = requests.post(url, headers=headers, data=payload, timeout=5)
+            self.access_token = r.json()['access_token']
+            print("New access token retrieved with unexpired refresh token.")
+        except requests.exceptions.ConnectTimeout as e:
+            print(e)
+            exit()
+        
 
 
-class StreamClient:
+class WebSocketClient():
+    """The client """
     
-    pass
+    def __init__(self, uri):
+        self.uri = uri
+        
+    async def connect(self):
+        '''
+            Connecting to webSocket server
+            websockets.client.connect returns a WebSocketClientProtocol, which is used to send and receive messages
+        '''
+                
+        # connect to a websocket
+        self.connection = await wsClient.connect(self.uri)
+        
+        # if all goes well, let the user know
+        if self.connection.open:
+            print("connection established. client correctly connected")
+            return self.connection
+        
+    async def sendMessage(self, message):
+        '''
+            Sending message to webSocket server: 
+            - send login information
+            - subscribe to data
+        '''
+        await self.connection.send(message)
+        
+    async def receiveMessage(self, connection):
+        '''
+            Receiving all server messages and handle them 
+            it'd be in infinite loop, won't stop until user interruption
+        '''
+        while True:   
+            try: 
+                # grab and decode the message
+                message = await connection.recv()
+                message_decoded = json.loads(message)
+                
+                # print the data if the response contains data
+                if 'data' in message_decoded.keys():
+                    print(message_decoded['data'])
+                
+                print('-'*20)
+                print('Received message from server:'+ str(message))
+                
+            except websockets.exceptions.ConnectionClosed:
+                print("connection with server closed")
+                break
+                
+                
+    async def heartbeat(self, connection):
+        '''
+            Sending heartbeat to server every 5 seconds
+            Ping - pong messages to verify connection is alive
+        '''
+        while True:
+            try:
+                await connection.send('ping')
+                await asyncio.sleep(5)
+            except websockets.exceptions.ConnectionClosed:
+                print('Connection with server closed')
+                break                 
+
+
+class StreamClient():
+    
+    def __init__(self, client):
+        self.account_id = client.account_id
+        self.access_token = client.access_token 
+
+    async def login(self):
+        # Get Streamer info from User Principles
+        headers = {'Authorization': f'Bearer {self.access_token}'}
+        endpoint = 'https://api.tdameritrade.com/v1/userprincipals'
+        params = {'fields':'streamerSubscriptionKeys,streamerConnectionInfo'}
+        r = requests.get(url=endpoint, params=params, headers=headers)
+        userPrinciplesResponse = r.json()
+
+        # Extract streamer information
+        streamerInfo = userPrinciplesResponse['streamerInfo']
+
+        # Extract specific account details
+        for account in userPrinciplesResponse['accounts']:
+            if account['accountId'] == self.account_id:
+                account = account
+        
+        # Grab the token timestamp and convert it to ms since epoch, which is accepted by Streamer
+        def unix_time_ms(dt):
+            # grab the starting point, so time '0'
+            epoch = datetime.datetime.utcfromtimestamp(0)
+            
+            return (dt-epoch).total_seconds() * 1000.0
+
+        tokentimestamp = streamerInfo['tokenTimestamp']
+        tokentimestamp = parser.parse(tokentimestamp, ignoretz=True)
+        tokentimestampMs = unix_time_ms(tokentimestamp)
+
+        # Define the credentials required for login command
+        credential = {
+            'userid': account['accountId'],
+            'token': streamerInfo['token'], 
+            'company':  account['company'],
+            'segment': account['segment'],
+            'cddomain': account['accountCdDomainId'],
+            'usergroup':streamerInfo['userGroup'],
+            'accesslevel': streamerInfo['accessLevel'],
+            'authorized': 'Y',
+            'acl': streamerInfo['acl'],
+            'timestamp': int(tokentimestampMs),
+            'appid': streamerInfo['appId']    
+            }
+
+        
+        # Define a login request
+        login_request = {
+            'service':'ADMIN',
+            'requestid': '0', # login request comes first
+            'command': 'LOGIN',
+            'account': self.account_id,
+            'source': streamerInfo['appId'],
+            'parameters': {
+                'token': streamerInfo['token'],
+                'version': '1.0',
+                'credential': urllib.parse.urlencode(credential) # convert json arguments to a query string
+            }
+        }
+
+        # turn the request into json strings
+        login_encoded = json.dumps(login_request)
+
+        # Extract websocket streamer url
+        uri = 'wss://'+streamerInfo['streamerSocketUrl']+'/ws'
+
+        # send login request to streamer api
+        ws = WebSocketClient(uri)
+        self.connection = await ws.connect()
+
+
+client = Client()
+#client.get_first_access_token()
+client.authenticate()
+
+
+async def main():
+    stream_client = StreamClient(client)
+    await stream_client.login()
+
+asyncio.run(main())
+
+        
+
 
 #print('OK')
