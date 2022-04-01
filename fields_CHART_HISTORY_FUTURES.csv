@@ -1,0 +1,8 @@
+,Fields,Field Name,Type,Field Description,Update,Update AM/PM,"Notes, Examples"
+0,0,key,String,Ticker symbol in upper case. ,N/A,N/A,See Symbology Table
+1,1,Chart Time,long,Milliseconds since Epoch,Yes,Yes, 
+2,2,Open Price,double,Opening price for the minute,Yes,Yes, 
+3,3,High Price,double,Highest price for the minute,Yes,Yes, 
+4,4,Low Price,double,Chart’s lowest price for the minute,Yes,Yes, 
+5,5,Close Price,double,Closing price for the minute,Yes,Yes, 
+6,6,Volume,doulbe,Total volume for the minute,Yes,Yes, 

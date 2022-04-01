@@ -1,0 +1,54 @@
+,Fields,Field Name,Type,Field Description,Update,Update AM/PM,"Notes, Examples"
+0,0,Symbol,String,Ticker symbol in upper case. ,N/A,N/A,See Symbology Table
+1,1,Bid Price,float,Current Best Bid Price,Yes,Yes,From FH
+2,2,Ask Price,float,Current Best Ask Price,Yes,Yes,From FH
+3,3,Last Price,float,Price at which the last trade was matched,Yes,Yes,From FH
+4,4,Bid Size,float,Number of shares for bid,Yes,Yes,From FH
+5,5,Ask Size,float,Number of shares for ask,Yes,Yes,From FH
+6,6,Ask ID,char,Exchange with the best ask,Yes,Yes,From FH
+7,7,Bid ID,char,Exchange with the best bid,Yes,Yes,From FH
+8,8,Total Volume,long,"Aggregated shares traded throughout the day, including pre/post market hours.",Yes,Yes,Volume is set to zero at 7:28am ET. 
+9,9,Last Size,float,Number of shares traded with last trade,Yes,Yes,Size in 100’s
+10,10,Trade Time,int,Trade time of the last trade,Yes,Yes,Seconds since midnight EST
+11,11,Quote Time,int,Trade time of the last quote,Yes,Yes,Seconds since midnight EST
+12,12,High Price,float,Day’s high trade price,Yes,Yes,"[<li>According to industry standard, only regular session trades set the High and Low. </li>, <li>If a stock does not trade in the AM session, high and low will be zero.</li>, <li>High/low reset to 0 at 7:28am ET</li>]"
+13,13,Low Price,float,Day’s low trade price,Yes,Yes,See High Price notes
+14,14,Bid Tick,char,Indicates Up or Downtick (NASDAQ NMS & Small Cap),Yes,Yes,Updates whenever bid updates.  Source=FH
+15,15,Close Price,float,Previous day’s closing price,No,No,[<li>Closing prices are updated from the DB when Pre-Market tasks are run at 7:29AM ET.</li>]
+16,16,Exchange ID,char,"Primary ""listing"" Exchange",No,No,NYSE = n             AMEX = a    
+17,17,Marginable,boolean,Stock approved by the Federal Reserve and an investor's broker as being suitable for providing collateral for margin debt.,N/A,N/A,Load from DB
+18,18,Shortable,boolean,Stock can be sold short.,N/A,N/A,Load from DB
+19,19,Island Bid,float,No longer used,N/A,N/A,N/A
+20,20,Island Ask,float,No longer used,N/A,N/A,N/A
+21,21,Island Volume,Int,No longer used,N/A,N/A,N/A
+22,22,Quote Day,Int,Day of the quote,N/A,N/A, 
+23,23,Trade Day,Int,Day of the trade,N/A,N/A, 
+24,24,Volatility,float,Option Risk/Volatility Measurement,Yes,Yes,Volatility is reset to 0 when Pre-Market tasks are run at 7:28 AM ET
+25,25,Description,String,"A company, index or fund name",Yes,Yes,Once per day descriptions are loaded from the database when Pre-Market tasks are run at 7:29:50 AM ET. 
+26,26,Last ID,char,Exchange where last trade was executed,Yes,Yes, 
+27,27,Digits,int,Valid decimal points,Yes,Yes,"AMEX, NASDAQ,OTCBB,PINKS =  4, others = 2"
+28,28,Open Price,float,Day's Open Price,Yes,Yes,From FH
+29,29,Net Change,float,Current Last-Prev Close,Yes,Yes,If(close>0)
+30,30,52  Week High,float,"Higest price traded in the past 12 months, or 52 weeks",Yes,Yes,Calculated by merging dayHigh(from fh) and 52 week high from db
+31,31,52 Week Low,float,"Lowest price traded in the past 12 months, or 52 weeks",Yes,Yes,Calculated by merging dayLow(from fh) and 52 week low from db
+32,32,PE Ratio,float, ,N/A,N/A,From db
+33,33,Dividend Amount,float,Earnings Per Share,N/A,N/A,From db
+34,34,Dividend Yield,float,Dividend Yield,N/A,N/A,From db
+35,35,Island Bid Size,Int,No longer used,N/A,N/A,N/A
+36,36,Island Ask Size,Int,No longer used,N/A,N/A,N/A
+37,37,NAV,float,Mutual Fund Net Asset Value,N/A,N/A,load various times after market close
+38,38,Fund Price,float, ,N/A,N/A,From db
+39,39,Exchange Name,String,Display name of exchange,N/A,N/A,From db
+40,40,Dividend Date,String, ,N/A,N/A,From db
+41,41,Regular Market Quote,boolean, ,Yes,No,Is last quote a regular quote
+42,42,Regular Market Trade,boolean, ,Yes,No,Is last trade a regular trade
+43,43,Regular Market Last Price,float, ,Yes,No,only records regular trade
+44,44,Regular Market Last Size,float, ,Yes,No,"Currently realize/100, only records regular trade"
+45,45,Regular Market Trade Time,int, ,Yes,No,only records regular trade
+46,46,Regular Market Trade Day,int, , , , 
+47,47,Regular Market Net Change,float, ,Yes,No,RegularMarketLastPrice - close
+48,48,Security Status,String, ,Yes,Yes,"Indicates a symbols current trading status, Normal, Halted, Closed"
+49,49,Mark,double,Mark Price,Yes,Yes, 
+50,50,Quote Time in Long,Long,Last quote time in milliseconds since Epoch,Yes,Yes, 
+51,51,Trade Time in Long,Long,Last trade time in milliseconds since Epoch,Yes,Yes, 
+52,52,Regular Market Trade Time in Long,Long,Regular market trade time in milliseconds since Epoch,Yes,No, 

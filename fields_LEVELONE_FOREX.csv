@@ -1,0 +1,31 @@
+,Fields,Field Name,Type,Field Description,Update,Update AM/PM,"Notes, Examples"
+0,0,Symbol,String,Ticker symbol in upper case. ,N/A,N/A,See Symbology Table
+1,1,Bid Price,double,Current Best Bid Price,Yes,Yes,From FH
+2,2,Ask Price,double,Current Best Ask Price,Yes,Yes,From FH
+3,3,Last Price,double,Price at which the last trade was matched,Yes,Yes,From FH
+4,4,Bid Size,long,Number of shares for bid,Yes,Yes,From FH
+5,5,Ask Size,long,Number of shares for ask,Yes,Yes,From FH
+6,6,Total Volume,double,"Aggregated shares traded throughout the day, including pre/post market hours.",Yes,Yes,From FH
+7,7,Last Size,long,Number of shares traded with last trade,Yes,Yes,From FH
+8,8,Quote Time,long,Trade time of the last quote in milliseconds since epoch,Yes,Yes,From FH
+9,9,Trade Time,long,Trade time of the last trade in milliseconds since epoch,Yes,Yes,From FH
+10,10,High Price,double,Day’s high trade price,Yes,Yes,From FH
+11,11,Low Price,double,Day’s low trade price,Yes,Yes,From FH
+12,12,Close Price,double,Previous day’s closing price,N/A,N/A,From FH
+13,13,Exchange ID,char,"Primary ""listing"" Exchange",N/A,N/A,
+14,14,Description,String,Description of the product,N/A,N/A,Database and IPF file
+15,15,Open Price,double,Day's Open Price,Yes,Yes,From FH
+16,16,Net Change,double,Current Last-Prev Close,Yes,Yes,If(close>0)
+17,17,Percent Change,double,Current percent change,Yes,Yes, If(close>0)
+18,18,Exchange Name,String,Name of exchange,N/A,N/A, 
+19,19,Digits,Int,Valid decimal points,N/A,N/A, 
+20,20,Security Status,String,Trading status of the symbol,Yes,Yes,"Indicates a symbols current trading status, Normal, Halted, Closed"
+21,21,Tick,double,Minimum price movement,N/A,N/A, From Database (priceIncrement)
+22,22,Tick Amount,double,Minimum amount that the price of the market can change,N/A,N/A,Tick * multiplier field from database
+23,23,Product,String,Product name,N/A,N/A, 
+24,23,Trading Hours,String,Trading hours,N/A,N/A,Loaded from IPF File from Database
+25,24,Is Tradable,boolean,Flag to indicate if this forex is tradable,N/A,N/A,Loaded from IPF File from Database
+26,25,Market Maker,String, , , , 
+27,26,52 Week High,double,"Higest price traded in the past 12 months, or 52 weeks",Yes,Yes, 
+28,27,52 Week Low,double,"Lowest price traded in the past 12 months, or 52 weeks",Yes,Yes, 
+29,28,Mark,double,Mark-to-Market value is calculated daily using current prices to determine profit/loss,Yes,Yes, 

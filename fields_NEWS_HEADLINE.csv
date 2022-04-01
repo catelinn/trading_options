@@ -1,0 +1,12 @@
+,Fields,Field Name,Type,Field Description,Update,Update AM/PM,"Notes, Examples"
+0,0,Symbol,String,Ticker symbol in upper case. ,N/A,N/A,See Symbology Table
+1,1,Error Code,double,Specifies if there is any error.,Yes,Yes,
+2,2,Story Datetime,long,Headline’s datetime in milliseconds since epoch,Yes,Yes,From FH
+3,3,Headline ID,String,Unique ID for the headline,Yes,Yes,From FH
+4,4,Status,char, ,Yes,Yes,From FH
+5,5,Headline,String,News headline,Yes,Yes,From FH
+6,6,Story ID,String, ,Yes,Yes,From FH
+7,7,Count for Keyword,integer, ,Yes,Yes,From FH
+8,8,Keyword Array,String, , , , 
+9,9,Is Hot,boolean, , , , 
+10,10,Story Source,char, , , , 

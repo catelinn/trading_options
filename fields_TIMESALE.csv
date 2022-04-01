@@ -1,0 +1,6 @@
+,Fields,Field Name,Type,Field Description,Update,Update AM/PM,"Notes, Examples"
+0,0,Symbol,String,Ticker symbol in upper case. ,N/A,N/A,See Symbology Table
+1,1,Trade Time,long,Trade time of the last trade in milliseconds since epoch,Yes,Yes,From FH
+2,2,Last Price,double,Price at which the last trade was matched,Yes,Yes,From FH
+3,3,Last Size,double,Number of shares traded with last trade,Yes,Yes,From FH
+4,4,Last Sequence,long,Number of shares for bid,Yes,Yes,From SP

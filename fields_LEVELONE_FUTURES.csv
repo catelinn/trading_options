@@ -1,0 +1,37 @@
+,Fields,Field Name,Type,Field Description,Update,Update AM/PM,"Notes, Examples"
+0,0,Symbol,String,Ticker symbol in upper case. ,N/A,N/A,See Symbology Table
+1,1,Bid Price,double,Current Best Bid Price,Yes,Yes,From FH
+2,2,Ask Price,double,Current Best Ask Price,Yes,Yes,From FH
+3,3,Last Price,double,Price at which the last trade was matched,Yes,Yes,From FH
+4,4,Bid Size,long,Number of shares for bid,Yes,Yes,From FH
+5,5,Ask Size,long,Number of shares for ask,Yes,Yes,From FH
+6,6,Ask ID,char,Exchange with the best ask,Yes,Yes,From FH
+7,7,Bid ID,char,Exchange with the best bid,Yes,Yes,From FH
+8,8,Total Volume,double,"Aggregated shares traded throughout the day, including pre/post market hours.",Yes,Yes,From FH
+9,9,Last Size,long,Number of shares traded with last trade,Yes,Yes,From FH
+10,10,Quote Time,long,Trade time of the last quote in milliseconds since epoch,Yes,Yes,From FH
+11,11,Trade Time,long,Trade time of the last trade in milliseconds since epoch,Yes,Yes,From FH
+12,12,High Price,double,Day’s high trade price,Yes,Yes,From FH
+13,13,Low Price,double,Day’s low trade price,Yes,Yes,From FH
+14,14,Close Price,double,Previous day’s closing price,N/A,N/A,From FH
+15,15,Exchange ID,char,"Primary ""listing"" Exchange",N/A,N/A,"I = ICE, E = CME, L=LIFFEUS"
+16,16,Description,String,Description of the product,N/A,N/A,Database and IPF file
+17,17,Last ID,char,Exchange where last trade was executed,Yes,Yes,From FH
+18,18,Open Price,double,Day's Open Price,Yes,Yes,From FH
+19,19,Net Change,double,Current Last-Prev Close,Yes,Yes,If(close>0)
+20,20,Future Percent Change,double,Current percent change,Yes,Yes, If(close>0)
+21,21,Exhange Name,String,Name of exchange, , , 
+22,22,Security Status,String,Trading status of the symbol,Yes,Yes,"Indicates a symbols current trading status, Normal, Halted, Closed"
+23,23,Open Interest,int,The total number of futures ontracts that are not closed or delivered on a particular day,Yes,Yes,From FH
+24,24,Mark,double,Mark-to-Market value is calculated daily using current prices to determine profit/loss,Yes,Yes,"If lastprice is within spread,   "
+25,25,Tick,double,Minimum price movement,N/A,N/A, From Database (priceIncrement)
+26,26,Tick Amount,double,Minimum amount that the price of the market can change,N/A,N/A,Tick * multiplier field from database
+27,27,Product,String,Futures product,N/A,N/A,From Database
+28,28,Future Price Format,String,Display in fraction or decimal format.,N/A,N/A,Config
+29,29,Future Trading Hours,String,Trading hours,N/A,N/A,"days: 0 = monday-friday, 1 = sunday,"
+30,30,Future Is Tradable,boolean,Flag to indicate if this future contract is tradable,N/A,N/A,Loaded from IPF File from Database
+31,31,Future Multiplier,double,Point value,N/A,N/A,Loaded from IPF File from Database
+32,32,Future Is Active,boolean,Indicates if this contract is active,Yes,Yes,From Database and realtime QDS admin message
+33,33,Future Settlement Price,double,Closing price,Yes,Yes,From FH
+34,34,Future Active Symbol,String,Symbol of the active contract,N/A,N/A,Loaded from IPF File from Database
+35,35,Future Expiration Date,long,Expiration date of this contract,N/A,N/A,Milliseconds since epoch
