@@ -15,6 +15,10 @@ import websockets
 from websockets import client as wsClient
 import asyncio
 
+import psycopg2 # for use with postgresql server
+from sqlalchemy import create_engine # connect and work with database
+from sqlalchemy import text # accepts the textual SQL query string
+
 
 # import config files
 # add sys path for Python interpreter to search in
@@ -204,83 +208,19 @@ class Client:
 class WebSocketClient():
     """The client """
 
-
-    def __init__(self):
-        pass
-        
-    async def connect(self, uri):
-        '''
-            Connecting to webSocket server
-            websockets.client.connect returns a WebSocketClientProtocol, which is used to send and receive messages
-        '''
-                
-        # connect to a websocket
-        self.connection = await wsClient.connect(uri)
-        
-        # if all goes well, let the user know
-        if self.connection.open:
-            print("connection established. client correctly connected")
-            return self.connection
-        
-    async def sendMessage(self, message):
-        '''
-            Sending message to webSocket server: 
-            - send login information
-            - subscribe to data
-        '''
-        await self.connection.send(message)
-        
-    async def receiveMessage(self, connection):
-        '''
-            Receiving all server messages and handle them 
-            it'd be in infinite loop, won't stop until user interruption
-        '''
-        while True:   
-            try: 
-                # grab and decode the message
-                message = await connection.recv()
-                message_decoded = json.loads(message)
-                
-                # print the data if the response contains data
-                if 'data' in message_decoded.keys():
-                    print(message_decoded['data'])
-                
-                print('-'*20)
-                print('Received message from server:'+ str(message))
-                
-            except websockets.exceptions.ConnectionClosed:
-                print("connection with server closed")
-                break
-                
-                
-    async def heartbeat(self, connection):
-        '''
-            Sending heartbeat to server every 5 seconds
-            Ping - pong messages to verify connection is alive
-        '''
-        while True:
-            try:
-                await connection.send('ping')
-                await asyncio.sleep(5)
-            except websockets.exceptions.ConnectionClosed:
-                print('Connection with server closed')
-                break                 
-
-
-class StreamClient():
-
     def __init__(self, client):
         self.account_id = client.account_id
         self.access_token = client.access_token 
+        # Create the connection engine to the stock database
+        self.engine = create_engine('postgresql://localhost/stock_db_test')
 
-    # initialize websocket object
-    ws = WebSocketClient()
+    
+    async def connect(self):
 
-    async def login(self, ws=ws):
         '''
-        - Fetch streamer info from User Principles, which is required to generate the url for login to the websocket server
-        - Connect and login to the webserver
-        - Return the ws connection object
+        Step 1:
+        - Fetch streamer info from User Principles, 
+        - Generate the url and account details for login to the websocket server
         '''
         
         # Get Streamer info
@@ -291,12 +231,12 @@ class StreamClient():
         userPrinciplesResponse = r.json()
 
         # Extract Streamer info
-        streamerInfo = userPrinciplesResponse['streamerInfo']
+        self.streamerInfo = userPrinciplesResponse['streamerInfo']
 
         # Extract specific account details
         for account in userPrinciplesResponse['accounts']:
             if account['accountId'] == self.account_id:
-                account = account
+                self.account = account
         
         # Grab the token timestamp and convert it to ms since epoch, which is accepted by Streamer
         def unix_time_ms(dt):
@@ -305,64 +245,180 @@ class StreamClient():
             
             return (dt-epoch).total_seconds() * 1000.0
 
-        tokentimestamp = streamerInfo['tokenTimestamp']
+        tokentimestamp = self.streamerInfo['tokenTimestamp']
         tokentimestamp = parser.parse(tokentimestamp, ignoretz=True)
         tokentimestampMs = unix_time_ms(tokentimestamp)
 
         # Define the credentials required for login command
-        credential = {
-            'userid': account['accountId'],
-            'token': streamerInfo['token'], 
-            'company':  account['company'],
-            'segment': account['segment'],
-            'cddomain': account['accountCdDomainId'],
-            'usergroup':streamerInfo['userGroup'],
-            'accesslevel': streamerInfo['accessLevel'],
+        self.credential = {
+            'userid': self.account['accountId'],
+            'token': self.streamerInfo['token'], 
+            'company':  self.account['company'],
+            'segment': self.account['segment'],
+            'cddomain': self.account['accountCdDomainId'],
+            'usergroup':self.streamerInfo['userGroup'],
+            'accesslevel': self.streamerInfo['accessLevel'],
             'authorized': 'Y',
-            'acl': streamerInfo['acl'],
+            'acl': self.streamerInfo['acl'],
             'timestamp': int(tokentimestampMs),
-            'appid': streamerInfo['appId']    
+            'appid': self.streamerInfo['appId']    
             }
 
-        
         # Define a login request
         login_request = {
             'service':'ADMIN',
             'requestid': '0', # login request comes first
             'command': 'LOGIN',
-            'account': self.account_id,
-            'source': streamerInfo['appId'],
+            'account': ws_client.account['accountId'],
+            'source': ws_client.streamerInfo['appId'],
             'parameters': {
-                'token': streamerInfo['token'],
+                'token': ws_client.streamerInfo['token'],
                 'version': '1.0',
-                'credential': urllib.parse.urlencode(credential) # convert json arguments to a query string
+                'credential': urllib.parse.urlencode(ws_client.credential) # convert json arguments to a query string
             }
         }
 
-        # turn the request into json strings
-        login_encoded = json.dumps(login_request)
+        # Save the login details into json strings
+        self.login_details = json.dumps(login_request)
 
-        # Extract websocket streamer url
-        uri = 'wss://'+streamerInfo['streamerSocketUrl']+'/ws'
+        '''
+        Step 2.
+        - Connect to the webserver
+        - `websockets.client.connect` returns a `WebSocketClientProtocol` object, which is used to send and receive messages
+        '''
+        # Websocket streamer url
+        self.uri = 'wss://'+self.streamerInfo['streamerSocketUrl']+'/ws'
 
-        # send login request to streamer api
-        self.connection = await ws.connect(uri)
+        # connect to a websocket
+        self.connection = await wsClient.connect(self.uri)
+        
+        # if all goes well, let the user know
+        if self.connection.open:
+            print("connection established. client correctly connected")
+        
+        
+    async def sendMessage(self, message):
+        '''
+            Sending message to webSocket server: 
+            - send login request
+            - send data subscription request
+        '''
+        await self.connection.send(message)
+        
+    async def receiveMessage(self):
+        '''
+            Receiving all server messages and handle them 
+            it'd be in infinite loop, won't stop until user interruption
+        '''
+        while True:   
+            try: 
+                # grab and decode the message
+                message = await self.connection.recv()
+                message_decoded = json.loads(message)
+                
+                # print the data if the response contains data
+                if 'data' in message_decoded.keys():
+                    print(message_decoded['data'])
+                
+                print('-'*20)
+                print('Received message from server:'+ str(message))
 
+                # with self.engine.connect() as conn:
+                #     result = await conn.execute(text("""SELECT 'hello world';"""))
+                #     print(result.all())
+                
+            except websockets.exceptions.ConnectionClosed:
+                print("connection with server closed")
+                break
+
+    async def receiveMessage_once(self):
+        
+        '''
+            Receiving a server message, e.g. receive login response
+        '''   
+        try: 
+            # grab and decode the message
+            message = await self.connection.recv()
+            message_decoded = json.loads(message)
+            
+            # print the data if the response contains data
+            if 'data' in message_decoded.keys():
+                print(message_decoded['data'])
+            
+            print('-'*20)
+            print('Received message from server:'+ str(message))
+            
+        except websockets.exceptions.ConnectionClosed:
+            print("connection with server closed")
+            
+                
+    async def heartbeat(self):
+        '''
+            Sending heartbeat to server every 5 seconds
+            Ping - pong messages to verify connection is alive
+        '''
+        while True:
+            try:
+                await self.connection.send('ping')
+                await asyncio.sleep(5)
+            except websockets.exceptions.ConnectionClosed:
+                print('Connection with server closed')
+                break
+
+
+
+if __name__ == '__main__':
+
+    client = Client()
+    client.authenticate()
+    ws_client = WebSocketClient(client)
     
 
+    # define an event loop
+    loop = asyncio.get_event_loop()
+    
+    # start the connection to the websocket
+    loop.run_until_complete(ws_client.connect())
 
-client = Client()
-client.authenticate()
-
-
-async def main():
-    stream_client = StreamClient(client)
-    await stream_client.login()
-    print(stream_client.connection)
-
-asyncio.run(main())
-
-        
+    # login (once)
+    loop.run_until_complete(asyncio.gather(ws_client.sendMessage(ws_client.login_details), 
+                                           ws_client.receiveMessage_once()))
+    
+    # define request for different data sources
+    data_request = {'requests':[
+                                {
+                                'service': 'ACTIVES_NASDAQ',
+                                'requestid': '1',
+                                'command': 'SUBS',
+                                'account': ws_client.account['accountId'],
+                                'source': ws_client.streamerInfo['appId'],
+                                'parameters': {
+                                    'keys': 'NASDAQ-60',
+                                    'fields': '0,1'
+                                }},
+                                
+                                {
+                                'service': 'LEVELONE_FUTURES',
+                                'requestid': '2',
+                                'command': 'SUBS',
+                                'account': ws_client.account['accountId'],
+                                'source': ws_client.streamerInfo['appId'],
+                                'parameters': {
+                                    'keys': '/ES',
+                                    'fields': '0,3,8'
+                                }}
+                                ]
+                    }
+    data_encoded = json.dumps(data_request)
+    
+    
+    # subscribe, receive and handle streaming data asynchronously
+    stream_tasks = [asyncio.ensure_future(ws_client.sendMessage(data_encoded)),
+                   asyncio.ensure_future(ws_client.receiveMessage())]
+    
+    # run the tasks
+    loop.run_until_complete(asyncio.gather(*stream_tasks, return_exceptions=True))
+  
 
 
 #print('OK')
