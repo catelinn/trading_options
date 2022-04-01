@@ -323,9 +323,9 @@ class WebSocketClient():
                 print('-'*20)
                 print('Received message from server:'+ str(message))
 
-                # with self.engine.connect() as conn:
-                #     result = await conn.execute(text("""SELECT 'hello world';"""))
-                #     print(result.all())
+                with self.engine.connect() as conn:
+                    result = conn.execute(text("SELECT 'hello world';"))
+                    print(result.all())
                 
             except websockets.exceptions.ConnectionClosed:
                 print("connection with server closed")
