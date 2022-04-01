@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup as bs
 from matplotlib.collections import EventCollection
+import pandas as pd
 
 with open('fields.html') as f:
 
@@ -26,7 +27,10 @@ def extractText(cell):
     except:
         pass
 
-
+data = []
 for row in table.findAll('tr'):
     cells = row.findAll('td')
-    print([extractText(cell) for cell in cells], '\n')
+    data.append([extractText(cell) for cell in cells])
+
+df = pd.DataFrame(columns=data[0], data=data[1:])
+df.to_csv('QUOTE_fields.csv')
