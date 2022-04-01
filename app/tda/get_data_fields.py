@@ -1,10 +1,14 @@
 from bs4 import BeautifulSoup as bs
 from matplotlib.collections import EventCollection
 import pandas as pd
+import os
+
+os.chdir('app/tda/')
+print(os.getcwd())
 
 # Go to TDA streaming data guide webpage, use inspect tool to find field definitions table of a service
 # copy the table elemnt and save the html to 'fields.html' for use in this script
-with open('fields.html') as f:
+with open('descriptions/fields.html') as f:
 
     html = f.read()
 
@@ -40,6 +44,7 @@ def main(service):
         data.append([extractText(cell) for cell in cells])
 
     df = pd.DataFrame(columns=data[0], data=data[1:])
-    df.to_csv(f'fields_{service}.csv')
+    df.to_csv(f'descriptions/fields_{service}.csv')
 
+import sys
 main('TIMESALE')
