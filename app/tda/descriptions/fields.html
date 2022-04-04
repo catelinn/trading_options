@@ -55,13 +55,13 @@
     <p align="center">1</p>
     </td>
     <td style="width:13.78%;">
-    <p>Trade Time</p>
+    <p>Bid Price</p>
     </td>
     <td style="width:11.14%;">
-    <p align="center">long</p>
+    <p align="center">double</p>
     </td>
     <td style="width:29.74%;">
-    <p>Trade time of the last trade in milliseconds since epoch</p>
+    <p>Current Best Bid Price</p>
     </td>
     <td style="width:7.48%;">
     <p align="center" style="margin-left:3.75pt;">Yes</p>
@@ -76,6 +76,29 @@
     <tr>
     <td style="width:4.6%;">
     <p align="center">2</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Ask Price</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Current Best Ask Price</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">From FH</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">3</p>
     </td>
     <td style="width:13.78%;">
     <p>Last Price</p>
@@ -98,13 +121,82 @@
     </tr>
     <tr>
     <td style="width:4.6%;">
-    <p align="center">3</p>
+    <p align="center">4</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Bid Size</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">long</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Number of shares for bid</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">From FH</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">5</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Ask Size</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">long</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Number of shares for ask</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">From FH</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">6</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Total Volume</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Aggregated shares traded throughout the day, including pre/post market hours.</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">From FH</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">7</p>
     </td>
     <td style="width:13.78%;">
     <p>Last Size</p>
     </td>
     <td style="width:11.14%;">
-    <p align="center">double</p>
+    <p align="center">long</p>
     </td>
     <td style="width:29.74%;">
     <p>Number of shares traded with last trade</p>
@@ -121,16 +213,16 @@
     </tr>
     <tr>
     <td style="width:4.6%;">
-    <p align="center">4</p>
+    <p align="center">8</p>
     </td>
     <td style="width:13.78%;">
-    <p>Last Sequence</p>
+    <p>Quote Time</p>
     </td>
     <td style="width:11.14%;">
     <p align="center">long</p>
     </td>
     <td style="width:29.74%;">
-    <p>Number of shares for bid</p>
+    <p>Trade time of the last quote in milliseconds since epoch</p>
     </td>
     <td style="width:7.48%;">
     <p align="center" style="margin-left:3.75pt;">Yes</p>
@@ -139,7 +231,492 @@
     <p align="center" style="margin-left:3.75pt;">Yes</p>
     </td>
     <td style="width:26.2%;">
-    <p style="margin-left:3.75pt;">From SP</p>
+    <p style="margin-left:3.75pt;">From FH</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">9</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Trade Time</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">long</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Trade time of the last trade in milliseconds since epoch</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">From FH</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">10</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>High Price</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Day’s high trade price</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">From FH</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">11</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Low Price</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Day’s low trade price</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">From FH</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">12</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Close Price</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Previous day’s closing price</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">From FH</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">13</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Exchange ID</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">char</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Primary "listing" Exchange</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:26.2%;">&nbsp;</td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">14</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Description</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">String</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Description of the product</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">Database and IPF file</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">15</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Open Price</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Day's Open Price</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">From FH</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">16</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Net Change</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Current Last-Prev Close</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">If(close&gt;0)</p>
+    <p style="margin-left:3.75pt;">change = last – close</p>
+    <p style="margin-left:3.75pt;">else change=0</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">17</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Percent Change</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Current percent change</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">&nbsp;If(close&gt;0)</p>
+    <p style="margin-left:3.75pt;">&nbsp;pctChange = (last – close)/close</p>
+    <p style="margin-left:3.75pt;">else pctChange=0</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">18</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Exchange Name</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">String</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Name of exchange</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">&nbsp;</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">19</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Digits</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">Int</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Valid decimal points</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">&nbsp;</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">20</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Security Status</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">String</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Trading status of the symbol</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">Indicates a symbols current trading status, Normal, Halted, Closed</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">21</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Tick</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Minimum price movement</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">&nbsp;From Database (priceIncrement)</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">22</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Tick Amount</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Minimum amount that the price of the market can change</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">Tick * multiplier field from database</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">23</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Product</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">String</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Product name</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">&nbsp;</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">23</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Trading Hours</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">String</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Trading hours</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">Loaded from IPF File from Database</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">24</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Is Tradable</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">boolean</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Flag to indicate if this forex is tradable</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">N/A</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">Loaded from IPF File from Database</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">25</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Market Maker</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">String</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>&nbsp;</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">&nbsp;</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">&nbsp;</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">&nbsp;</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">26</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>52 Week High</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Higest price traded in the past 12 months, or 52 weeks</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">&nbsp;</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">27</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>52 Week Low</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Lowest price traded in the past 12 months, or 52 weeks</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">&nbsp;</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="width:4.6%;">
+    <p align="center">28</p>
+    </td>
+    <td style="width:13.78%;">
+    <p>Mark</p>
+    </td>
+    <td style="width:11.14%;">
+    <p align="center">double</p>
+    </td>
+    <td style="width:29.74%;">
+    <p>Mark-to-Market value is calculated daily using current prices to determine profit/loss</p>
+    </td>
+    <td style="width:7.48%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:7.04%;">
+    <p align="center" style="margin-left:3.75pt;">Yes</p>
+    </td>
+    <td style="width:26.2%;">
+    <p style="margin-left:3.75pt;">&nbsp;</p>
     </td>
     </tr>
     </tbody>
