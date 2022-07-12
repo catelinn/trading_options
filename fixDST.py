@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime, timedelta
 
-# fix date error due to day time saving
+# fix time error due to day time saving
 f = 'outputs/signals_marketclose.csv'
 df = pd.read_csv(f)
 
